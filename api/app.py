@@ -21,14 +21,14 @@ class PredictIn(BaseModel):
 class Span(BaseModel):
     start_index: int
     end_index: int
-    label: str
+    entity: str
 
 @app.post("/api/predict")
 async def predict(body: PredictIn) -> List[Span]:
     if not isinstance(body.input, str):
         raise HTTPException(status_code=400, detail="Field 'input' must be a string")
     spans = predict_spans(body.input)
-    return [Span(start_index=start, end_index=end, label=label) for start, end, label in spans]
+    return [Span(start_index=start, end_index=end, entity=label) for start, end, label in spans]
 
 @app.get("/health")
 def health():

@@ -133,4 +133,3 @@ def macro_f1(true_chunks: List[List[Entity]], pred_chunks: List[List[Entity]]) -
             per_type[t]['fn'] += fn
     f1s = [f1_from_counts(per_type[t]['tp'], per_type[t]['fp'], per_type[t]['fn']) for t in TARGETS]
     return sum(f1s) / len(f1s) if f1s else 0.0
-

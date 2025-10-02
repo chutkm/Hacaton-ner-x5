@@ -1,0 +1,60 @@
+{
+  "use_crf": true,
+  "model_name": "bert-base-multilingual-cased",
+  "best_threshold": {
+    "thr": 0.5557938777364956,
+    "score": 0.6545977685915662
+  },
+  "train_args": {
+    "model_name_or_path": "bert-base-multilingual-cased",
+    "train_csv": "data/train_split_fixed.csv",
+    "val_csv": "data/val_split_fixed.csv",
+    "output_dir": "models/v_grok",
+    "max_length": 128,
+    "optuna_trials": 0,
+    "optuna_fast": false,
+    "optuna_timeout": null,
+    "optuna_pruner": true,
+    "use_crf": true,
+    "dropout": 0.22,
+    "stage1_head_only": true,
+    "stage1_epochs": 2,
+    "stage1_lr": 0.0005,
+    "stage2_full": true,
+    "stage2_epochs": 3,
+    "stage2_lr": 5e-05,
+    "train_bs": 16,
+    "eval_bs": 16,
+    "fp16": false,
+    "thr_search_iter": 50,
+    "seed": 42,
+    "run_name": "run_grok",
+    "save_parts": true,
+    "load_parts_dir": null,
+    "parts_to_load": "bert,classifier,crf"
+  },
+  "optuna_trials": 0,
+  "optuna_best_params": null,
+  "class_weights": {
+    "O": 0.2704562842845917,
+    "B-TYPE": 0.20000000298023224,
+    "I-TYPE": 0.20000000298023224,
+    "B-BRAND": 0.20000000298023224,
+    "I-BRAND": 0.20000000298023224,
+    "B-VOLUME": 0.20000000298023224,
+    "I-VOLUME": 0.5522171258926392,
+    "B-PERCENT": 4.933738708496094,
+    "I-PERCENT": 2.692323923110962
+  },
+  "class_counts": {
+    "O": 33657,
+    "B-TYPE": 158093,
+    "I-TYPE": 307585,
+    "B-BRAND": 52797,
+    "I-BRAND": 85248,
+    "B-VOLUME": 49230,
+    "I-VOLUME": 16484,
+    "B-PERCENT": 1845,
+    "I-PERCENT": 3381
+  }
+}

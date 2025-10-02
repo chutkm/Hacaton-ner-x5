@@ -1,3 +1,5 @@
+# inference.py
+
 import os
 import json
 import torch
@@ -11,6 +13,11 @@ from src.utils import (
     id2label,
     fix_bio_labels
 )
+
+_model = None
+_tokenizer = None
+_threshold = None
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def load_model(model_dir: str):
     """
@@ -40,7 +47,6 @@ def load_model(model_dir: str):
     if os.path.isdir(os.path.join(model_dir, "tokenizer")):
         tok_dir = os.path.join(model_dir, "tokenizer")
     
-
     tokenizer = AutoTokenizer.from_pretrained(tok_dir, use_fast=True)
 
     config_path = os.path.join(model_dir, "config.json")
@@ -50,7 +56,7 @@ def load_model(model_dir: str):
         config = AutoConfig.from_pretrained("bert-base-uncased")
         config.num_labels = len(LABELS)
         config.id2label = {i: label for i, label in enumerate(LABELS)}
-        config.label2id = {label: i for i, label in enumerate(LABELS)}
+        config.label2id = {label: i for label in enumerate(LABELS)}
 
     try:
         model = ModularTokenClassifier.from_pretrained(
@@ -91,12 +97,13 @@ def correct_empty_spans(spans: List[Tuple[int, int, str]], sample: str) -> List[
         return [(0, len(sample), 'O')]
     return spans
 
+
 @torch.inference_mode()
 def predict_spans(
     text: str,
-    model: ModularTokenClassifier,
-    tokenizer,
-    device: str = "cuda",
+    model: Optional[ModularTokenClassifier] = None,
+    tokenizer: Optional[Any] = None,
+    device: str = DEVICE,
     threshold: float = 0.6,
     max_length: int = 128
 ) -> List[Tuple[int, int, str]]:
@@ -105,8 +112,8 @@ def predict_spans(
     
     Args:
         text: Входной текст для обработки
-        model: Загруженная NER-модель
-        tokenizer: Токенизатор, соответствующий модели
+        model: Загруженная NER-модель (опционально)
+        tokenizer: Токенизатор, соответствующий модели (опционально)
         device: Устройство для вычислений (cpu/cuda)
         threshold: Порог уверенности для фильтрации спанов
         max_length: Максимальная длина последовательности
@@ -114,6 +121,17 @@ def predict_spans(
     Returns:
         Список кортежей (start, end, label) - выделенные сущности
     """
+    global _model, _tokenizer, _threshold
+    
+    if model is None or tokenizer is None:
+        if _model is None or _tokenizer is None:
+            model_path = "/home/ubuntu/x5-ner-base-label-pro/models/v_grok/final_model"
+            _tokenizer, _model, _threshold = load_model(model_path)
+            _model.to(device)
+        model = _model
+        tokenizer = _tokenizer
+        if threshold == 0.6:  # Если используется значение по умолчанию
+            threshold = _threshold
 
     if not text or not text.strip():
         return []
@@ -187,7 +205,6 @@ def predict_spans(
 
     formatted_spans = []
     for span in spans:
-        
         formatted_spans.append((span["start_index"], span["end_index"], span["original_label"]))
     
     formatted_spans = fix_bio_spans(formatted_spans, text)

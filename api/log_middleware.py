@@ -50,7 +50,7 @@ class LogIO(BaseHTTPMiddleware):
         dur_ms = round((time.time() - t0) * 1000, 1)
 
         log.info(
-            "method=%s path=%s status=%s ms=%s req_len=%s resp_len=%s req_body=%s resp_body=%s",
+            "method=%s path=%s status=%s ms=%s req_len=%s resp_len=%s Body=%s Response=%s",
             request.method,
             request.url.path,
             getattr(response, "status_code", "NA"),

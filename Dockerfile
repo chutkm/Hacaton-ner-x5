@@ -15,8 +15,8 @@ RUN pip install --no-cache-dir -U pip && \
 COPY api /app/api
 COPY src/model /app/src/model
 COPY src/inference.py /app/src/inference.py
-COPY src/utils.py /app/src/utils.py  # Только если используется в inference
-COPY src/metrics.py /app/src/metrics.py  # Только если используется в inference
+COPY src/utils.py /app/src/utils.py  
+COPY src/model/modular.py /app/src/model/modular.py  
 
 COPY models/serve /app/models/serve
 
