@@ -1,0 +1,10 @@
+torch>=1.12
+transformers>=4.20
+datasets>=2.0
+seqeval
+scikit-learn
+pandas
+numpy
+tqdm
+torchcrf
+safetensors
