@@ -1,5 +1,5 @@
 
-# Named Entity Recognition (NER) Service for Product Search Queries
+# Named Entity Recognition (NER) Service for Product Search Queries!
 
 This repository contains a **Named Entity Recognition (NER)** service designed for extracting entities (`TYPE`, `BRAND`, `VOLUME`, `PERCENT`) from product search queries. The system uses a transformer-based model with an optional CRF layer for sequence labeling, implemented in **PyTorch**, and provides a **FastAPI**-based API for inference.
 
